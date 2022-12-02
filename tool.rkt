@@ -18,7 +18,13 @@
     (define autorun-mixin
       (mixin ((class->interface text%)) ()
 
-        (define/augment (after-edit-sequence)
+        (define/augment (after-insert start len)
+          (inner (void) after-insert start len)
+          ;; XXX Steals focus
+          (when autorun?
+            (send autorun? execute-callback)))
+        (define/augment (after-delete start len)
+          (inner (void) after-delete start len)
           (when autorun?
             (send autorun? execute-callback)))
         
